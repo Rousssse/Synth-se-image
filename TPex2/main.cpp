@@ -1,6 +1,8 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
+#include <glimac/Program.hpp>
+#include <glimac/FilePath.hpp>
 
 int window_width  = 1280;
 int window_height = 720;
@@ -27,12 +29,14 @@ static void size_callback(GLFWwindow* /*window*/, int width, int height)
     window_height = height;
 }
 
-int main()
+int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 {
     /* Initialize the library */
     if (!glfwInit()) {
         return -1;
     }
+
+
 
     /* Create a window and its OpenGL context */
 #ifdef __APPLE__
@@ -57,6 +61,11 @@ int main()
     }
 
     /* Hook input callbacks */
+    glimac::FilePath applicationPath ="/home/elisa/OPENGLMAX/GLImac-Template/TP2/shaders/";
+    std::cout << applicationPath << std::endl;
+    glimac::Program program = loadProgram(applicationPath.dirPath() + "shaders/triangle.vs.glsl", applicationPath.dirPath() + "shaders/triangle.fs.glsl");
+    program.use();
+
     glfwSetKeyCallback(window, &key_callback);
     glfwSetMouseButtonCallback(window, &mouse_button_callback);
     glfwSetScrollCallback(window, &scroll_callback);
@@ -65,18 +74,26 @@ int main()
     GLuint vbo;
     glGenBuffers(1,&vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    GLfloat vertices [] = {-0.5f, -0.5f,0.5f,-0.5f,0.0f,0.5f};
-    glBufferData(GL_ARRAY_BUFFER,6 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+    GLfloat vertices [] = {-0.5f, -0.5f,1.f, 0.f, 0.f,
+    0.5f,-0.5f,0.f, 1.f, 0.f,
+    0.0f,0.5f, 0.f, 0.f, 1.f
+    };
+    glBufferData(GL_ARRAY_BUFFER,15 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
     glBindBuffer(0,vbo);
     GLuint vao;
     glGenVertexArrays(1,&vao);
     glBindVertexArray(vao);
-    const GLuint VERTEX_ATTR_POSITION = 0;
-    glEnableVertexAttribArray(VERTEX_ATTR_POSITION);
+    //const GLuint VERTEX_ATTR_POSITION = 0;
+    glEnableVertexAttribArray(3);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glVertexAttribPointer(VERTEX_ATTR_POSITION, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
+    glBindBuffer(0,vbo);
+    glEnableVertexAttribArray(8);
+    glBindBuffer(GL_ARRAY_BUFFER,vbo);
+    glVertexAttribPointer(8,3,GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(2* sizeof(GLfloat)));
     glBindBuffer(0,vbo);
     glBindVertexArray(0);
+
     
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
