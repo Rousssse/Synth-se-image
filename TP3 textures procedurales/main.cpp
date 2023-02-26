@@ -76,7 +76,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     /* Hook input callbacks */
     glimac::FilePath applicationPath = "/home/elisa/OPENGLMAX/GLImac-Template/TP3/shaders";
     std::cout << applicationPath << std::endl;
-    glimac::Program program = loadProgram(applicationPath.dirPath() + "shaders/mandelbrot.vs.glsl", applicationPath.dirPath() + "shaders/mandelbrot.fs.glsl");
+    glimac::Program program = loadProgram(applicationPath.dirPath() + "shaders/color2D.vs.glsl", applicationPath.dirPath() + "shaders/color2D.fs.glsl");
     //glimac::Program program = loadProgram(applicationPath.dirPath() + argv[1], applicationPath.dirPath() + argv[2]);
     program.use();
 
@@ -88,16 +88,39 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     GLuint vbo;
     glGenBuffers(1,&vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    /* Code du quad 
     Vertex2DColor vertices[] = { 
-    Vertex2DColor(glm::vec2(-1, -1), glm::vec3(1, 1, 1)),
-    Vertex2DColor(glm::vec2(-1, 1), glm::vec3(1, 1, 1)),
-    Vertex2DColor(glm::vec2(1, -1), glm::vec3(1, 1, 1)),
-    Vertex2DColor(glm::vec2(1, -1), glm::vec3(1, 1, 1)),
-    Vertex2DColor(glm::vec2(1, 1), glm::vec3(1, 1, 1)),
-    Vertex2DColor(glm::vec2(-1,1 ), glm::vec3(1, 1, 1))
+    Vertex2DColor(glm::vec2(-0.5, 0.5), glm::vec3(1, 1, 0)),
+    Vertex2DColor(glm::vec2(-0.5, -0.5), glm::vec3(0, 1, 1)),
+    Vertex2DColor(glm::vec2(0.5, -0.5), glm::vec3(1, 0, 1)),
+    Vertex2DColor(glm::vec2(-0.5, 0.5), glm::vec3(1, 0, 1)),
+    Vertex2DColor(glm::vec2(0.5, 0.5), glm::vec3(0, 1, 1)),
+    Vertex2DColor(glm::vec2(0.5, -0.5), glm::vec3(1, 1, 0))
 
 };
     glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(Vertex2DColor), vertices, GL_STATIC_DRAW);
+    glBindBuffer(0,vbo);
+    GLuint vao;
+    glGenVertexArrays(1,&vao);
+    glBindVertexArray(vao);
+    //const GLuint VERTEX_ATTR_POSITION = 0;
+    glEnableVertexAttribArray(3);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2DColor), 0);
+    glBindBuffer(0,vbo);
+    glEnableVertexAttribArray(8);
+    glBindBuffer(GL_ARRAY_BUFFER,vbo);
+    glVertexAttribPointer(8,3,GL_FLOAT, GL_FALSE, sizeof(Vertex2DColor), (const GLvoid*)(offsetof(Vertex2DColor, color)));
+    glBindBuffer(0,vbo);
+    glBindVertexArray(0);*/
+
+    Vertex2DColor vertices[] = { 
+    Vertex2DColor(glm::vec2(-0.5, -0.5), glm::vec3(1, 1, 0)),
+    Vertex2DColor(glm::vec2(0.0, 0.5), glm::vec3(0, 1, 1)),
+    Vertex2DColor(glm::vec2(0.5, -0.5), glm::vec3(1, 0, 1))
+
+};
+    glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Vertex2DColor), vertices, GL_STATIC_DRAW);
     glBindBuffer(0,vbo);
     GLuint vao;
     glGenVertexArrays(1,&vao);
@@ -114,14 +137,13 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     glBindVertexArray(0);
 
     
-    
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
         glClearColor(1.f, 0.5f, 0.5f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT);
         
         glBindVertexArray(vao);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
         
 
