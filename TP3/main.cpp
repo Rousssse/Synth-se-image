@@ -151,18 +151,18 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 
     float rot = 0.1;
 
-    glm::mat3 translationTR = translate(0.5,0.5);
-    glm::mat3 translationTL = translate(-0.5,0.5);
-    glm::mat3 translationBL = translate(-0.5,-0.5);
-    glm::mat3 translationBR = translate(0.5,-0.5);
+    glm::mat3 translationHD = translate(0.5,0.5);
+    glm::mat3 translationHG = translate(-0.5,0.5);
+    glm::mat3 translationBG = translate(-0.5,-0.5);
+    glm::mat3 translationBD = translate(0.5,-0.5);
     glm::mat3 scaling = scale(0.25,0.25);
 
     
     GLint uColor = glGetUniformLocation(program.getGLId(), "uColor");
-    glm::vec3 color1 = {0.75,0.20,0.89};
-    glm::vec3 color2 = {0.20,0.20,0.80};
-    glm::vec3 color3 = {0.20,0.80,0.20};
-    glm::vec3 color4 = {0.85,0.20,0.20};
+    glm::vec3 color1 = {0.65,0.15,0.77};
+    glm::vec3 color2 = {0.17,0.50,0.69};
+    glm::vec3 color3 = {0.45,0.70,0.27};
+    glm::vec3 color4 = {0.42,0.12,0.96};
 
     GLint uTexture = glGetUniformLocation(program.getGLId(), "uTexture");
 
@@ -185,19 +185,19 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
         glm::mat3 rotation = rotate(rot);
         glm::mat3 rotation_inverse = rotate(-rot);
 
-         glUniformMatrix3fv(uModelMatrix,1,GL_FALSE, glm::value_ptr(translationBL*rotation*scaling));
+         glUniformMatrix3fv(uModelMatrix,1,GL_FALSE, glm::value_ptr(translationBG*rotation*scaling));
         glUniform3fv(uColor,1,glm::value_ptr(color1));
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
-        glUniformMatrix3fv(uModelMatrix,1,GL_FALSE, glm::value_ptr(translationTL*(rotation_inverse)*scaling));
+        glUniformMatrix3fv(uModelMatrix,1,GL_FALSE, glm::value_ptr(translationHG*(rotation_inverse)*scaling));
         glUniform3fv(uColor,1,glm::value_ptr(color2));
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
-        glUniformMatrix3fv(uModelMatrix,1,GL_FALSE, glm::value_ptr(translationTR*rotation*scaling));
+        glUniformMatrix3fv(uModelMatrix,1,GL_FALSE, glm::value_ptr(translationHD*rotation*scaling));
         glUniform3fv(uColor,1,glm::value_ptr(color3));
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
-        glUniformMatrix3fv(uModelMatrix,1,GL_FALSE, glm::value_ptr(translationBR*(rotation_inverse)*scaling));
+        glUniformMatrix3fv(uModelMatrix,1,GL_FALSE, glm::value_ptr(translationBD*(rotation_inverse)*scaling));
         glUniform3fv(uColor,1,glm::value_ptr(color4));
         glDrawArrays(GL_TRIANGLES, 0, 3);
         
