@@ -8,13 +8,13 @@ in vec2 vTexCoords;
 
 out vec4 fFragColor;
 
-uniform sampler2D uTexture0;
-uniform sampler2D uTexture1;
+uniform sampler2D uEarthTexture;
+uniform sampler2D uCloudTexture;
 
 void main()
 {
-    vec4 textureE = texture(uTexture0, vTexCoords);
-    vec4 textureC = texture(uTexture1, vTexCoords);
+    vec4 textureE = texture(uEarthTexture, vTexCoords);
+    vec4 textureC = texture(uCloudTexture, vTexCoords);
     vec4 resultColor = textureE + textureC;
     fFragColor = resultColor;
 }
