@@ -179,6 +179,12 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     GLint uCloudTexture = glGetUniformLocation(program.getGLId(), "uTexture1");
     GLint mTexture = glGetUniformLocation(program.getGLId(), "uTexture0");
     
+    
+    
+   
+    
+    
+    
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
         glClearColor(0.2f, 0.2f, 0.2f, 1.f);
