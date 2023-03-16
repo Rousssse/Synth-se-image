@@ -10,46 +10,25 @@
 #include <glimac/getTime.hpp>
 #include <glm/gtc/random.hpp>
 #include <cstddef>
-#include <glimac/TrackBallCamera.hpp>
 
 int window_width  = 1280;
 int window_height = 720;
 //float ratio = window_width/window_height;
 
-struct Inputs {
-    double yoffset;
-    int mouseButton;
-    glm::vec2 currentPosition;
-    glm::vec2 prevPosition;
-};
-
-Inputs entry;
-
 static void key_callback(GLFWwindow* /*window*/, int /*key*/, int /*scancode*/, int /*action*/, int /*mods*/)
 {
 }
 
-static void mouse_button_callback(GLFWwindow* /*window*/, int button, int /*action*/, int /*mods*/)
+static void mouse_button_callback(GLFWwindow* /*window*/, int /*button*/, int /*action*/, int /*mods*/)
 {
-    if(entry.mouseButton !=0 && button == 0){
-         entry.mouseButton = button;
-    }
-    else {
-        entry.mouseButton = -1;
-    }
-       
-    std::cout << entry.mouseButton << std::endl;
 }
 
-static void scroll_callback(GLFWwindow* /*window*/, double /*xoffset*/, double yoffset)
+static void scroll_callback(GLFWwindow* /*window*/, double /*xoffset*/, double /*yoffset*/)
 {
-    entry.yoffset += -0.5*yoffset;
-    
 }
 
-static void cursor_position_callback(GLFWwindow* /*window*/, double xpos, double ypos)
+static void cursor_position_callback(GLFWwindow* /*window*/, double /*xpos*/, double /*ypos*/)
 {
-    entry.currentPosition = glm::vec2(xpos,ypos);
 }
 
 static void size_callback(GLFWwindow* /*window*/, int width, int height)
@@ -220,41 +199,19 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
         axes_rot.push_back(glm::sphericalRand(0.85f));
         pos_start.push_back(glm::sphericalRand(2.0f));
     }
-    glimac::TrackballCamera camera;
 
     
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
         glClearColor(0.2f, 0.2f, 0.2f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glm::mat4 globalMVMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0, 0, -5));
-        
-        camera.moveFront(entry.yoffset);
-        if(entry.currentPosition.x < entry.prevPosition.x && entry.mouseButton==-1){
-            camera.rotateUp(2.0f);
-        }
-        if(entry.currentPosition.x > entry.prevPosition.x && entry.mouseButton==-1){
-            camera.rotateUp(-2.0f);
-        }
-        if(entry.currentPosition.y < entry.prevPosition.y && entry.mouseButton==-1){
-            camera.rotateLeft(2.0f);
-        }
-        if(entry.currentPosition.y > entry.prevPosition.y && entry.mouseButton==-1){
-            camera.rotateLeft(-2.0f);
-        }
-        entry.currentPosition = entry.prevPosition;
-        entry.yoffset = 0;
-        globalMVMatrix = camera.getViewMatrix();
-        
-        
         
         earthProgram.m_Program.use();
         glUniform1i(earthProgram.uEarthTexture, 0);
         glUniform1i(earthProgram.uCloudTexture, 1);
-        
 
         // dessin de la Terre
-        
+        glm::mat4 globalMVMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0, 0, -5));
 
         glm::mat4 earthMVMatrix = glm::rotate(globalMVMatrix, glimac::getTime(), glm::vec3(0, 1, 0));
         glUniformMatrix4fv(earthProgram.uMVMatrix, 1, GL_FALSE, 
@@ -289,7 +246,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
         
         for(int i=0; i<lunes ; i++){
             glm::mat4 moonMVMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 0,-5));
-            moonMVMatrix = glm::rotate(globalMVMatrix, glimac::getTime(), axes_rot[i]);
+            moonMVMatrix = glm::rotate(moonMVMatrix, glimac::getTime(), axes_rot[i]);
             moonMVMatrix = glm::translate(moonMVMatrix, pos_start[i]);
             moonMVMatrix = glm::scale(moonMVMatrix, glm::vec3(0.2, 0.2, 0.2));
             
